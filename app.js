@@ -79,11 +79,7 @@ function home() {
         </div>
         <div class="lupa-introduction">
           <p class="lupa-intro"><strong lang="it">Ciao! Mi chiamo Lupa.</strong> Привет! Я Лупа. Моё имя значит «волчица». Послушай и повтори вслух!</p>
-          <div class="buttons lupa-actions">
-            <button type="button" class="action" id="lupa-voice">🔊 Послушать Лупу</button>
-            ${link('Попробовать букву L', '#book/15')}
-          </div>
-          <div id="lupa-status" role="status"></div>
+            <div id="lupa-status" role="status"></div>
           <details class="lupa-story"><summary>Почему Лупа из Рима?</summary><p>По древней легенде волчица позаботилась о близнецах Ромуле и Реме. Позже Ромул, по преданию, основал Рим. Так волчица стала одним из символов города.</p></details>
         </div>
         <div class="buttons hero-navigation">${link(solved.size && solved.size < total ? 'Продолжить уроки' : 'Начать урок', '#lesson/' + next.id, true)}${link('Открыть тетрадь', '#book')}</div>
@@ -103,7 +99,7 @@ function home() {
     <div class="home-help">
       <details><summary>Как пользоваться тетрадью?</summary>
         <ol>
-          <li><strong>Послушать Лупу.</strong> Нажми на неё или кнопку с динамиком и повтори приветствие.</li>
+          <li><strong>Поздороваться с Лупой.</strong> Нажми на Лупу и повтори её приветствие.</li>
           <li><strong>Начать урок.</strong> Выбери ответ и проверь себя.</li>
           <li><strong>Открыть тетрадь.</strong> Выбери страницу, чтобы писать, рисовать или решать кроссворды. В словаре по кнопке 🔊 можно послушать слова.</li>
         </ol>
@@ -127,7 +123,6 @@ function home() {
   }
   character.querySelector('.lupa-head').addEventListener('animationend', () => character.classList.remove('is-greeting'));
   character.onclick = greet;
-  node('lupa-voice').onclick = greet;
 }
 
 function lesson(theme) {

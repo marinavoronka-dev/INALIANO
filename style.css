@@ -292,7 +292,7 @@ html:not([data-installable]) [data-install-app]{display:none}
 .home-help ol{padding-left:1.35em}
 .home-help li+li{margin-top:6px}
 .home-help button{margin-bottom:12px}
-.lupa-actions .action,.hero-navigation .action{min-height:46px}
+.hero-navigation .action{min-height:46px}
 @media(max-width:600px){
   .hero{grid-template-columns:minmax(0,1fr) minmax(100px,32%);grid-template-areas:"heading mascot" "intro intro" "nav nav";gap:10px;
     padding:16px;min-height:0}
