@@ -83,17 +83,18 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
   app.innerHTML = `<section class="mobile-book">
     <div class="mobile-book-heading"><div><span class="tag">Интерактивная тетрадь</span><h1>${escape(pageTitle(page))}</h1></div>
     <a class="original-link" href="#paper/${page}">Оригинал PDF</a></div>
-    <div class="mobile-book-nav" aria-label="Страницы">
+    ${page === 'contents' || page === 'cover' ? '' : `<div class="mobile-book-nav" aria-label="Страницы">
       ${neighbors(-1,'‹ Назад')}
       <select id="mobile-page" aria-label="Страница">${pages.map(id => `<option value="${id}" ${id === page ? 'selected' : ''}>${escape(pageTitle(id))}</option>`).join('')}</select>
       ${neighbors(1,'Дальше ›')}
-      ${page === 'contents' ? '' : '<a class="book-toc" href="#book/contents">Содержание</a>'}
-    </div>
+      <a class="book-toc" href="#book/contents">Содержание</a>
+    </div>`}
     <div id="mobile-steps" class="mobile-steps" aria-label="Задания страницы"></div>
     <div id="mobile-task"></div>
     <div id="mobile-storage" role="status"></div>
   </section>`;
-  byId('mobile-page').onchange = event => { location.hash = 'book/' + event.target.value; };
+  const pagePicker = byId('mobile-page');
+  if (pagePicker) pagePicker.onchange = event => { location.hash = 'book/' + event.target.value; };
 
   function focusTitle() {
     const title = byId('mobile-title');
@@ -141,23 +142,36 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
     const step = steps[stepIndex];
     const host = byId('mobile-task');
     if (page === 'contents') {
-      host.innerHTML = `<nav class="toc-card" aria-label="Содержание тетради">
+      const [intro] = activitiesFor('1');
+      const last = read('last-page', '');
+      const resume = pages.includes(last) && Number(last) >= 2 && Number(last) <= 65
+        ? bookLink(last,'Продолжить со стр. ' + last,true) : '';
+      host.innerHTML = `<section class="toc-intro" aria-labelledby="toc-intro-title">
+        <div><h2 id="toc-intro-title">${escape(intro.title)}</h2>
+          <div class="toc-tips">${intro.items.map(([title,description]) =>
+            `<div><strong>${escape(title)}</strong><small>${escape(description)}</small></div>`).join('')}</div>
+        </div>
+        <img src="${artSource('intro-reader')}" alt="" width="180" height="130">
+      </section>
+      <nav class="toc-card" aria-label="Содержание тетради">
+        <div class="toc-section-heading"><h2>Выбери тему</h2>${resume}</div>
         <div class="toc-grid">${themes.map(({page,ru,it,icon}) => `<a class="toc-tile" href="#book/${page}">
           <div class="toc-tile-top"><span class="symbol" aria-hidden="true">${icon}</span><span class="toc-number">стр. ${page}</span></div>
           <div><strong>${ru}</strong><small lang="it">${it}</small></div>
         </a>`).join('')}</div>
+        <h2 class="toc-reference-title">Справочные страницы</h2>
         <div class="toc-reference">
           <a class="action" href="#book/alphabet">Таблица букв</a>
-          <a class="action" href="#book/1">Вступление</a>
           <a class="action" href="#book/66">Словарь</a>
+          <a class="action" href="#book/cover">Обложка</a>
         </div>
       </nav>`;
       return;
     }
     if (!step) {
-      host.innerHTML = `<article class="mobile-card"><h2 id="mobile-title" tabindex="-1">${page === 'cover' ? 'Benvenuto! Добро пожаловать!' : 'Выбери тему'}</h2>
+      host.innerHTML = `<article class="mobile-card book-cover">
         ${gallery()}
-        <div class="theme-picks">${themes.map(theme => `<a class="theme" style="--tile:${theme.color}" href="#book/${theme.page}"><span class="symbol" aria-hidden="true">${theme.icon}</span><span><strong>${theme.ru}</strong><small lang="it">${theme.it}</small></span></a>`).join('')}</div></article>`;
+        ${bookLink('contents','Открыть содержание',true)}</article>`;
       return;
     }
     const galleryBelow = page === '43' || page === '52';

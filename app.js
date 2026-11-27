@@ -245,7 +245,7 @@ let selectedTool = 'text';
 let selectedInk = inks[0][0];
 
 function notebook(page) {
-  save('last-page', page);
+  if (/^\d+$/.test(page)) save('last-page', page);
   const pageIndex = pageIds.indexOf(page);
   const nearby = (offset, label) => pageIds[pageIndex + offset]
     ? link(label, '#paper/' + pageIds[pageIndex + offset])
@@ -531,10 +531,12 @@ function route() {
   if (section === 'lesson' && theme) lesson(theme);
   else if (section === 'book' || section === 'paper') {
     const lastPage = read('last-page', '2');
-    const page = pageIds.includes(value) ? value : pageIds.includes(lastPage) ? lastPage : '2';
+    const page = pageIds.includes(value) ? value
+      : section === 'book' ? 'contents'
+      : pageIds.includes(lastPage) ? lastPage : '2';
     if (section === 'paper') notebook(page);
     else {
-      save('last-page',page);
+      if (/^\d+$/.test(page)) save('last-page',page);
       leave = mountMobile(app,{page,pages:pageIds,pageTitle:titleForPage,read,save,speech,artSource});
     }
   }
