@@ -34,6 +34,8 @@ export function mountPad(host, {guide, asset, source, initial, onChange, palette
   let ready = false;
   const regions = new Map();
   host.innerHTML = `
+    <div class="pad-quick-actions"><button type="button" class="action" data-pad-expand>На весь экран</button></div>
+    <div class="pad-surface">
     <div class="pad-tools" aria-label="Инструменты">
       ${asset ? '<button type="button" class="action" data-mode="fill">Заливка</button>' : ''}
       <button type="button" class="action" data-mode="draw">${asset ? 'Кисть' : 'Карандаш'}</button>
@@ -42,7 +44,34 @@ export function mountPad(host, {guide, asset, source, initial, onChange, palette
     </div>
     <div class="pad-palette">${palette.map(([hex, label]) => `<button type="button" class="pad-color" aria-label="${label}" data-ink="${hex}" style="--paint:${hex}"><i></i><span>${label}</span></button>`).join('')}</div>
     <div class="pad-frame"><canvas class="pad-base" aria-hidden="true"></canvas><canvas class="pad-ink" aria-label="${guide ? 'Поле для письма пальцем' : 'Поле для раскрашивания'}"></canvas></div>
-    <p class="pad-status muted" role="status"></p>`;
+    <p class="pad-status muted" role="status"></p></div>
+    <dialog class="pad-dialog" aria-label="${guide ? 'Пропись на весь экран' : 'Рисунок на весь экран'}">
+      <div class="pad-dialog-bar"><strong>${guide ? 'Пропись' : 'Рисунок'}</strong>
+        <button type="button" class="action primary" data-pad-close>Вернуться</button></div>
+    </dialog>`;
+  const panel = host.querySelector('.pad-dialog');
+  const surface = host.querySelector('.pad-surface');
+  const expand = host.querySelector('[data-pad-expand]');
+  const close = host.querySelector('[data-pad-close]');
+  expand.hidden = typeof panel.showModal !== 'function';
+  expand.onclick = () => {
+    finish();
+    panel.append(surface);
+    panel.showModal();
+    close.focus();
+  };
+  close.onclick = () => { if (panel.open) panel.close(); };
+  close.onpointerup = (event) => {
+    if (event.pointerType === 'touch' && panel.open) {
+      event.preventDefault();
+      panel.close();
+    }
+  };
+  panel.onclose = () => {
+    finish();
+    host.insertBefore(surface, panel);
+    expand.focus({preventScroll:true});
+  };
   const base = host.querySelector('.pad-base');
   const canvas = host.querySelector('.pad-ink');
   const background = base.getContext('2d',{willReadFrequently:true});

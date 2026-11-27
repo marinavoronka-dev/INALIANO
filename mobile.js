@@ -74,8 +74,8 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
       ${neighbors(-1,'‹ Назад')}
       <select id="mobile-page" aria-label="Страница">${pages.map(id => `<option value="${id}" ${id === page ? 'selected' : ''}>${escape(pageTitle(id))}</option>`).join('')}</select>
       ${neighbors(1,'Дальше ›')}
+      ${page === 'contents' ? '' : '<a class="book-toc" href="#book/contents">Содержание</a>'}
     </div>
-    ${page === 'contents' ? '' : '<a class="book-toc" href="#book/contents">Содержание</a>'}
     <div id="mobile-steps" class="mobile-steps" aria-label="Задания страницы"></div>
     <div id="mobile-task"></div>
     <div id="mobile-storage" role="status"></div>
