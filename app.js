@@ -73,24 +73,61 @@ function home() {
   app.innerHTML = `
     <section class="hero">
       <div class="hero-copy">
-        <div class="hero-meta"><span class="italian-flag" role="img" aria-label="Флаг Италии"></span><span class="tag">1 класс · 6+</span></div>
-        <h1>Мой первый <span>итальянский</span></h1>
-        <p class="lupa-intro"><strong lang="it">Ciao! Mi chiamo Lupa.</strong> Привет! Я Лупа. Моё имя по-итальянски значит «волчица». Послушай, повтори вслух и найди первую букву моего имени.</p>
-        <div class="buttons lupa-actions">
-          <button type="button" class="action primary" id="lupa-voice">🔊 Послушать Лупу</button>
-          ${link('Открыть букву L', '#book/15')}
+        <div class="hero-heading">
+          <div class="hero-meta"><span class="italian-flag" role="img" aria-label="Флаг Италии"></span><span class="tag">1 класс · 6+</span></div>
+          <h1>Мой первый <span>итальянский</span></h1>
         </div>
-        <div id="lupa-status" role="status"></div>
-        <details class="lupa-story"><summary>Почему Лупа из Рима?</summary><p>По древней легенде волчица позаботилась о близнецах Ромуле и Реме. Позже Ромул, по преданию, основал Рим. Так волчица стала одним из символов города.</p></details>
-        <div class="buttons hero-navigation">${link(solved.size && solved.size < total ? 'Продолжить уроки' : 'Начать урок', '#lesson/' + next.id, true)}${link('Открыть тетрадь', '#book')}<button type="button" class="action" data-install-app>Установить тетрадь</button></div>
+        <div class="lupa-introduction">
+          <p class="lupa-intro"><strong lang="it">Ciao! Mi chiamo Lupa.</strong> Привет! Я Лупа. Моё имя значит «волчица». Послушай и повтори вслух!</p>
+          <div class="buttons lupa-actions">
+            <button type="button" class="action" id="lupa-voice">🔊 Послушать Лупу</button>
+            ${link('Попробовать букву L', '#book/15')}
+          </div>
+          <div id="lupa-status" role="status"></div>
+          <details class="lupa-story"><summary>Почему Лупа из Рима?</summary><p>По древней легенде волчица позаботилась о близнецах Ромуле и Реме. Позже Ромул, по преданию, основал Рим. Так волчица стала одним из символов города.</p></details>
+        </div>
+        <div class="buttons hero-navigation">${link(solved.size && solved.size < total ? 'Продолжить уроки' : 'Начать урок', '#lesson/' + next.id, true)}${link('Открыть тетрадь', '#book')}</div>
       </div>
-      <div class="hero-art"><img src="lupa.webp" alt="Волчица Лупа с тетрадью"></div>
+      <div class="hero-art">
+        <button type="button" class="lupa-character" id="lupa-character" aria-label="Поздороваться с Лупой">
+          <span class="lupa-portrait">
+            <img class="lupa-still" src="lupa.webp" alt="">
+            <img class="lupa-body" src="lupa.webp" alt="">
+            <img class="lupa-head" src="lupa.webp" alt="">
+            <img class="lupa-tail" src="lupa.webp" alt="">
+          </span>
+          <span class="lupa-tap-label">Нажми на Лупу</span>
+        </button>
+      </div>
     </section>
+    <div class="home-help">
+      <details><summary>Как пользоваться тетрадью?</summary>
+        <ol>
+          <li><strong>Послушать Лупу.</strong> Нажми на неё или кнопку с динамиком и повтори приветствие.</li>
+          <li><strong>Начать урок.</strong> Выбери ответ и проверь себя.</li>
+          <li><strong>Открыть тетрадь.</strong> Выбери страницу, чтобы писать, рисовать или решать кроссворды. В словаре по кнопке 🔊 можно послушать слова.</li>
+        </ol>
+      </details>
+      <details><summary>Зачем устанавливать тетрадь?</summary>
+        <p>Установка необязательна. Она добавит значок на главный экран телефона или в список программ компьютера. Ребёнок сможет открывать тетрадь сам, одним нажатием.</p>
+        <p>Для первой загрузки материалов нужен интернет. После загрузки задания, картинки и озвучка доступны без сети.</p>
+        <button type="button" class="action" data-install-app>Установить тетрадь</button>
+      </details>
+    </div>
     <section aria-labelledby="themes-heading">
       <div class="section-title"><h2 id="themes-heading">Выбери тему</h2><span>${themes.filter((theme) => quizCount(theme) === theme.items.length).length} из 6 пройдено</span></div>
       <div class="themes">${themes.map((theme) => `<a class="theme" style="--tile:${theme.color}" href="#lesson/${theme.id}"><span class="symbol" aria-hidden="true">${theme.icon}</span><span><strong>${theme.ru}</strong><small lang="it">${theme.it}</small></span>${quizCount(theme) === theme.items.length ? '<span class="done" aria-label="Пройдено">✓</span>' : ''}</a>`).join('')}</div>
     </section>`;
-  node('lupa-voice').onclick = () => speech('Ciao! Mi chiamo Lupa.', node('lupa-status'));
+  const character = node('lupa-character');
+  function greet() {
+    character.classList.remove('is-greeting');
+    void character.offsetWidth;
+    character.classList.add('is-greeting');
+    speech('Ciao! Mi chiamo Lupa.', node('lupa-status'));
+  }
+  character.querySelector('.lupa-head').addEventListener('animationend', () => character.classList.remove('is-greeting'));
+  character.onclick = greet;
+  node('lupa-voice').onclick = greet;
 }
 
 function lesson(theme) {

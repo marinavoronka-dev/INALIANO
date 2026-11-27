@@ -196,7 +196,6 @@ html:not([data-installable]) [data-install-app]{display:none}
 .lupa-story summary{cursor:pointer;color:var(--accent);font-weight:750;padding:5px 0}
 .hero .lupa-story p{font-size:inherit;margin:3px 0 8px}
 #lupa-status:not(:empty){margin-top:6px;color:var(--orange);font-weight:750}
-.hero-navigation .primary{background:var(--white);color:var(--accent);border-color:var(--line)}
 
 .words{grid-template-columns:repeat(auto-fit,minmax(min(100%,285px),1fr))}
 .word,.mobile-word{gap:10px}
@@ -265,3 +264,49 @@ html:not([data-installable]) [data-install-app]{display:none}
   background:#53bfe72e;border:2px solid var(--accent);z-index:1}
 .family-caption{display:flex;min-height:54px;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;padding:6px 10px;border-radius:11px;background:#ddf3fc}
 .family-caption strong{color:var(--accent)}
+
+.lupa-character{position:relative;z-index:1;display:grid;justify-items:center;gap:5px;width:min(75%,310px);padding:0;
+  border:0;border-radius:18px;background:transparent;color:var(--accent);touch-action:manipulation}
+.lupa-character:focus-visible{outline:3px solid #1687ae;outline-offset:5px}
+.lupa-tap-label{background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:.86rem;font-weight:800;white-space:nowrap}
+.lupa-portrait{position:relative;display:block;width:100%;perspective:700px}
+.hero-art .lupa-portrait img{display:block;width:100%;max-width:none;height:auto;pointer-events:none}
+.hero-art .lupa-portrait img:not(.lupa-still){position:absolute;inset:0;visibility:hidden}
+@media(prefers-reduced-motion:no-preference){
+  .lupa-character.is-greeting .lupa-still{visibility:hidden}
+  .hero-art .lupa-character.is-greeting .lupa-portrait img:not(.lupa-still){visibility:visible}
+  .lupa-head{clip-path:polygon(0 0,100% 0,100% 35%,75% 35%,62% 39%,58% 42%,39% 47%,32% 45%,0 45%);
+    transform-origin:43% 42%}
+  .lupa-tail{clip-path:polygon(72% 72%,100% 71%,100% 100%,53% 100%,53% 97%,56% 92%,62% 87%,72% 81%);
+    transform-origin:75% 80%}
+  .lupa-body{clip-path:polygon(0 44%,32% 44%,39% 46%,58% 41%,62% 38%,75% 34%,100% 34%,100% 72%,72% 72%,73% 81%,63% 87%,57% 92%,54% 97%,54% 100%,0 100%)}
+  .lupa-character.is-greeting .lupa-head{animation:lupa-look 1.15s ease-in-out both}
+  .lupa-character.is-greeting .lupa-tail{animation:lupa-wag 1.15s ease-in-out both}
+}
+@keyframes lupa-look{0%,100%{transform:none}28%,66%{transform:rotate(-5deg) rotateY(15deg) translateY(-1%)}}
+@keyframes lupa-wag{0%,100%{transform:none}20%,58%{transform:rotate(-10deg)}38%,77%{transform:rotate(8deg)}}
+.home-help{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px;align-items:start}
+.home-help details{border:1px solid var(--line);border-radius:12px;background:white;padding:0 14px}
+.home-help summary{min-height:46px;padding:12px 0;cursor:pointer;color:var(--accent);font-weight:800}
+.home-help p,.home-help ol{margin:0 0 12px}
+.home-help ol{padding-left:1.35em}
+.home-help li+li{margin-top:6px}
+.home-help button{margin-bottom:12px}
+.lupa-actions .action,.hero-navigation .action{min-height:46px}
+@media(max-width:600px){
+  .hero{grid-template-columns:minmax(0,1fr) minmax(100px,32%);grid-template-areas:"heading mascot" "intro intro" "nav nav";gap:10px;
+    padding:16px;min-height:0}
+  .hero-copy{display:contents}
+  .hero-heading{grid-area:heading;z-index:1}
+  .hero h1{font-size:clamp(1.45rem,5.8vw,2.15rem);letter-spacing:-.045em}
+  .hero-art{grid-area:mascot;align-self:center;min-height:116px}
+  .hero-art::before{width:min(100%,135px)}
+  .hero-art::after{display:none}
+  .lupa-character{width:min(92%,136px)}
+  .lupa-tap-label{font-size:.69rem;padding:3px 5px}
+  .lupa-introduction{grid-area:intro;z-index:1}
+  .hero-navigation{grid-area:nav;z-index:1}
+  .hero .lupa-intro{margin:0 0 10px}
+  .lupa-story{margin:7px 0 0}
+  .home-help{grid-template-columns:1fr}
+}
