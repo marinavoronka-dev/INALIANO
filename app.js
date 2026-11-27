@@ -73,17 +73,24 @@ function home() {
   app.innerHTML = `
     <section class="hero">
       <div class="hero-copy">
-        <span class="tag">1 класс · 6+</span>
+        <div class="hero-meta"><span class="italian-flag" role="img" aria-label="Флаг Италии"></span><span class="tag">1 класс · 6+</span></div>
         <h1>Мой первый <span>итальянский</span></h1>
-        <p><strong>Я Лино!</strong> Давай начнём с урока. Когда увидишь кнопку «Послушать», нажми её и повтори слово вслух.</p>
-        <div class="buttons">${link(solved.size && solved.size < total ? 'Продолжить уроки' : 'Начать урок', '#lesson/' + next.id, true)}${link('Открыть тетрадь', '#book')}<button type="button" class="action" data-install-app>Установить тетрадь</button></div>
+        <p class="lupa-intro"><strong lang="it">Ciao! Mi chiamo Lupa.</strong> Привет! Я Лупа. Моё имя по-итальянски значит «волчица». Послушай, повтори вслух и найди первую букву моего имени.</p>
+        <div class="buttons lupa-actions">
+          <button type="button" class="action primary" id="lupa-voice">🔊 Послушать Лупу</button>
+          ${link('Открыть букву L', '#book/15')}
+        </div>
+        <div id="lupa-status" role="status"></div>
+        <details class="lupa-story"><summary>Почему Лупа из Рима?</summary><p>По древней легенде волчица позаботилась о близнецах Ромуле и Реме. Позже Ромул, по преданию, основал Рим. Так волчица стала одним из символов города.</p></details>
+        <div class="buttons hero-navigation">${link(solved.size && solved.size < total ? 'Продолжить уроки' : 'Начать урок', '#lesson/' + next.id, true)}${link('Открыть тетрадь', '#book')}<button type="button" class="action" data-install-app>Установить тетрадь</button></div>
       </div>
-      <div class="hero-art"><img src="lino.webp" alt="Лисёнок Лино с тетрадью" width="669" height="720"></div>
+      <div class="hero-art"><img src="lupa.webp" alt="Волчица Лупа с тетрадью"></div>
     </section>
     <section aria-labelledby="themes-heading">
       <div class="section-title"><h2 id="themes-heading">Выбери тему</h2><span>${themes.filter((theme) => quizCount(theme) === theme.items.length).length} из 6 пройдено</span></div>
       <div class="themes">${themes.map((theme) => `<a class="theme" style="--tile:${theme.color}" href="#lesson/${theme.id}"><span class="symbol" aria-hidden="true">${theme.icon}</span><span><strong>${theme.ru}</strong><small lang="it">${theme.it}</small></span>${quizCount(theme) === theme.items.length ? '<span class="done" aria-label="Пройдено">✓</span>' : ''}</a>`).join('')}</div>
     </section>`;
+  node('lupa-voice').onclick = () => speech('Ciao! Mi chiamo Lupa.', node('lupa-status'));
 }
 
 function lesson(theme) {
@@ -128,7 +135,7 @@ function lesson(theme) {
         option?.classList.add('wrong');
         feedback.classList.add('try');
         feedback.textContent = q.spoken
-          ? 'Попробуй ещё раз! Лино советует послушать подсказку ещё раз.'
+          ? 'Попробуй ещё раз! Лупа советует послушать подсказку ещё раз.'
           : 'Попробуй ещё раз!';
         return;
       }

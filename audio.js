@@ -21,6 +21,7 @@ export const clips = {
   "cavolfiore": "019",
   "ci": "020",
   "Ciao! Mi chiamo Giulio. Ho 8 anni.": "021",
+  "Ciao! Mi chiamo Lupa.": "103",
   "ciliegia": "022",
   "cinque": "023",
   "cipolla": "024",

@@ -186,3 +186,14 @@ html:not([data-installable]) [data-install-app]{display:none}
   .hero-art::before{box-shadow:0 0 0 8px #53bfe726}
   .hero-art::after{width:20px;right:24%;top:18%}
 }
+
+.hero-meta{display:flex;align-items:center;gap:10px}
+.italian-flag{display:block;width:46px;height:30px;border:1px solid #b7cbd1;border-radius:5px;
+  background:linear-gradient(90deg,#009246 0 33.33%,#fff 33.33% 66.67%,#ce2b37 66.67% 100%);flex:none}
+.hero .lupa-intro{margin-bottom:12px}
+.hero .lupa-intro strong{display:block}
+.lupa-story{font-size:.94rem;margin:9px 0 14px;color:var(--muted)}
+.lupa-story summary{cursor:pointer;color:var(--accent);font-weight:750;padding:5px 0}
+.hero .lupa-story p{font-size:inherit;margin:3px 0 8px}
+#lupa-status:not(:empty){margin-top:6px;color:var(--orange);font-weight:750}
+.hero-navigation .primary{background:var(--white);color:var(--accent);border-color:var(--line)}
