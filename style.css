@@ -197,3 +197,24 @@ html:not([data-installable]) [data-install-app]{display:none}
 .hero .lupa-story p{font-size:inherit;margin:3px 0 8px}
 #lupa-status:not(:empty){margin-top:6px;color:var(--orange);font-weight:750}
 .hero-navigation .primary{background:var(--white);color:var(--accent);border-color:var(--line)}
+
+.words{grid-template-columns:repeat(auto-fit,minmax(min(100%,285px),1fr))}
+.word,.mobile-word{gap:10px}
+.word-picture{width:clamp(60px,17vw,78px);height:clamp(60px,17vw,78px);padding:2px;border-color:var(--line)}
+.word .action{width:46px;min-height:46px;padding:0}
+
+.book-toc{display:inline-flex;align-items:center;min-height:42px;color:var(--accent);font-weight:750;text-underline-offset:3px}
+.mobile-steps:empty{display:none}
+#mobile-task{margin-top:10px}
+.alphabet-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:10px 0 14px}
+.alphabet-grid .action{display:grid;gap:3px;min-width:0;min-height:61px;padding:5px 1px;background:#edf7fb}
+.alphabet-grid strong{font-size:1.3rem;line-height:1;color:var(--accent)}
+.alphabet-grid small{font-size:.8rem;color:var(--muted)}
+.alphabet-grid .action:hover,.alphabet-grid .action:focus-visible{background:#d9f0f9;border-color:#72aabc}
+@media(max-width:500px){.alphabet-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.toc-card ul{margin:12px 0 0;padding:0;display:grid;gap:6px;list-style:none}
+.toc-card li a{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:50px;padding:7px 11px;border-radius:10px;border:1px solid var(--line);text-decoration:none}
+.toc-card li a:hover,.toc-card li a:focus-visible{background:#edf7fb;border-color:#72aabc}
+.toc-card li strong,.toc-card li small{display:block}
+.toc-card li small{font-size:.84rem;color:var(--muted)}
+.toc-number{font-size:.88rem;color:var(--accent);font-weight:750;white-space:nowrap}

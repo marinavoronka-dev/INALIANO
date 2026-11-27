@@ -75,6 +75,7 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
       <select id="mobile-page" aria-label="Страница">${pages.map(id => `<option value="${id}" ${id === page ? 'selected' : ''}>${escape(pageTitle(id))}</option>`).join('')}</select>
       ${neighbors(1,'Дальше ›')}
     </div>
+    ${page === 'contents' ? '' : '<a class="book-toc" href="#book/contents">Содержание</a>'}
     <div id="mobile-steps" class="mobile-steps" aria-label="Задания страницы"></div>
     <div id="mobile-task"></div>
     <div id="mobile-storage" role="status"></div>
@@ -106,6 +107,7 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
     renderFooter();
   }
   function renderStepper() {
+    if (page === 'alphabet') return;
     byId('mobile-steps').innerHTML = steps.map((step, i) =>
       `<button type="button" data-step="${i}" class="action" ${i === stepIndex ? enabled : ' aria-pressed="false"'}>${data[i]?.done ? '✓' : symbols[step.type]} ${labels[step.type]}</button>`).join('');
     byId('mobile-steps').querySelectorAll('button').forEach(button => button.onclick = () => setStep(+button.dataset.step));
@@ -125,6 +127,20 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
     renderStepper();
     const step = steps[stepIndex];
     const host = byId('mobile-task');
+    if (page === 'contents') {
+      const items = [
+        ['alphabet','Таблица букв',''],
+        ['1','Вступление','1'],
+        ...themes.map(theme => [String(theme.page),theme.ru,String(theme.page),theme.it]),
+        ['66','Словарь','66','Dizionario']
+      ];
+      host.innerHTML = `<nav class="mobile-card toc-card" aria-label="Содержание тетради">
+        <p>Нажми на раздел, чтобы открыть его страницу.</p>
+        <ul>${items.map(([id,label,number,italian]) => `<li><a href="#book/${id}"><span><strong>${label}</strong>${italian ? `<small lang="it">${italian}</small>` : ''}</span>
+            <span class="toc-number">${number ? 'стр. ' + number : 'Открыть'}</span></a></li>`).join('')}</ul>
+        </nav>`;
+      return;
+    }
     if (!step) {
       host.innerHTML = `<article class="mobile-card"><h2 id="mobile-title" tabindex="-1">${page === 'cover' ? 'Benvenuto! Добро пожаловать!' : 'Выбери тему'}</h2>
         ${gallery()}
@@ -186,7 +202,11 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
     }
 
     if (step.type === 'read') {
-      body.innerHTML = `<div class="mobile-wordlist">${step.items.map(([term,translation,color],i) => `<div class="mobile-word">${termPicture(term)}<div><strong ${page === '1' ? '' : 'lang="it"'}>${escape(term)}</strong><span>${color ? `<i class="swatch" style="background:${color}"></i>` : ''}${escape(translation)}</span></div>${page === '1' ? '' : soundButton.replace('aria-label="Послушать"',`data-sound="${i}" aria-label="Послушать ${escape(term)}"`)}</div>`).join('')}</div>
+      const words = page === 'alphabet'
+        ? `<p>Нажми на букву, чтобы услышать её название.</p><div class="alphabet-grid">${step.items.map(([term,pronunciation],i) =>
+          `<button type="button" class="action" data-sound="${i}" aria-label="Послушать ${escape(term)}"><strong lang="it">${escape(term)}</strong><small lang="it">${escape(pronunciation)}</small></button>`).join('')}</div>`
+        : `<div class="mobile-wordlist">${step.items.map(([term,translation,color],i) => `<div class="mobile-word">${termPicture(term)}<div><strong ${page === '1' ? '' : 'lang="it"'}>${escape(term)}</strong><span>${color ? `<i class="swatch" style="background:${color}"></i>` : ''}${escape(translation)}</span></div>${page === '1' ? '' : soundButton.replace('aria-label="Послушать"',`data-sound="${i}" aria-label="Послушать ${escape(term)}"`)}</div>`).join('')}</div>`;
+      body.innerHTML = `${words}
       ${choice(current.done ? '✓ Прочитано' : 'Я прочитал',current.done,'id="done-read"')}`;
       body.querySelectorAll('[data-sound]').forEach(button => {
         const [word,,,voice] = step.items[+button.dataset.sound];

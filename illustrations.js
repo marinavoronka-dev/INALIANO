@@ -4,14 +4,15 @@ const letters = ['ape','balena','cane','delfino','elefante','farfalla','giraffa'
 const vegetableNames = ['pomodoro','sedano','cipolla','porro','patata','peperone','ravanello','cavolfiore','mais','cavolo','pisello','zucchino'];
 
 export function wordPicture(word, theme) {
-  if (theme === 'fruit' && fruits.includes(word)) return 'fruit-' + word;
-  if (theme === 'vegetables' && vegetableNames.includes(word)) return '48-' + vegetableNames.indexOf(word);
+  if ((theme === 'letters' || theme === 'colors') && ['rosa','rosso'].includes(word)) return 'vocab-' + word;
+  if (theme === 'fruit' && fruits.includes(word)) return 'vocab-fruit-' + word;
+  if (theme === 'vegetables' && vegetableNames.includes(word)) return 'vocab-48-' + vegetableNames.indexOf(word);
   if (theme !== 'letters') return null;
   const index = letters.indexOf(word);
   if (index < 0) return null;
-  if (fruits.includes(word)) return 'fruit-' + word;
-  if (word === 'sole') return 'flash-9';
-  return String(index + 6);
+  if (fruits.includes(word)) return 'vocab-fruit-' + word;
+  if (word === 'sole') return 'vocab-sole';
+  return 'vocab-' + (index + 6);
 }
 
 const flashes = ['Ape — пчела','Baco — гусеница','Cane — собака','Gelato — мороженое','Girandola — вертушка','Hotel — отель','Quercia — дуб','Rana — лягушка','Sole — солнце'];
