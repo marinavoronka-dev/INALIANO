@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fffaf0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Мой первый итальянский</title>
+<meta name="description" content="Интерактивная рабочая тетрадь по итальянскому языку для 1 класса.">
+<meta name="author" content="Марина Воронцова">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" type="module"></script>
+<script src="install.js" type="module"></script>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <a class="brand" href="#home"><span class="flag" aria-hidden="true"></span><span>Мой первый <span class="brand-language">итальянский</span></span></a>
+    <nav aria-label="Разделы">
+      <a href="#home">Уроки</a><a href="#book">Тетрадь</a><a href="#words">Словарь</a>
+    </nav>
+    <img class="dante-logo" src="dante-togliatti.webp" alt="Società Dante Alighieri Togliatti" width="603" height="223">
+    <span id="score" class="score"></span>
+  </div>
+</header>
+<main id="app"></main>
+<dialog id="install-dialog" aria-labelledby="install-title">
+  <h2 id="install-title">Установка тетради</h2>
+  <p id="install-instructions"></p>
+  <p id="offline-status" role="status"></p>
+  <form method="dialog"><button class="action primary">Понятно</button></form>
+</dialog>
+<footer class="site-footer">
+  <small>Разработка приложения — <strong>Марина Воронцова</strong></small>
+  <div class="author-links" role="group" aria-label="Контакты разработчика">
+    <a href="https://vk.ru/mv_digital" target="_blank" rel="noopener noreferrer">ВКонтакте</a>
+    <a href="https://t.me/DesignVorontsova" target="_blank" rel="noopener noreferrer">Telegram</a>
+  </div>
+</footer>
+</body>
+</html>
