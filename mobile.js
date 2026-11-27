@@ -141,17 +141,17 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
     const step = steps[stepIndex];
     const host = byId('mobile-task');
     if (page === 'contents') {
-      const items = [
-        ['alphabet','Таблица букв',''],
-        ['1','Вступление','1'],
-        ...themes.map(theme => [String(theme.page),theme.ru,String(theme.page),theme.it]),
-        ['66','Словарь','66','Dizionario']
-      ];
-      host.innerHTML = `<nav class="mobile-card toc-card" aria-label="Содержание тетради">
-        <p>Нажми на раздел, чтобы открыть его страницу.</p>
-        <ul>${items.map(([id,label,number,italian]) => `<li><a href="#book/${id}"><span><strong>${label}</strong>${italian ? `<small lang="it">${italian}</small>` : ''}</span>
-            <span class="toc-number">${number ? 'стр. ' + number : 'Открыть'}</span></a></li>`).join('')}</ul>
-        </nav>`;
+      host.innerHTML = `<nav class="toc-card" aria-label="Содержание тетради">
+        <div class="toc-grid">${themes.map(({page,ru,it,icon}) => `<a class="toc-tile" href="#book/${page}">
+          <div class="toc-tile-top"><span class="symbol" aria-hidden="true">${icon}</span><span class="toc-number">стр. ${page}</span></div>
+          <div><strong>${ru}</strong><small lang="it">${it}</small></div>
+        </a>`).join('')}</div>
+        <div class="toc-reference">
+          <a class="action" href="#book/alphabet">Таблица букв</a>
+          <a class="action" href="#book/1">Вступление</a>
+          <a class="action" href="#book/66">Словарь</a>
+        </div>
+      </nav>`;
       return;
     }
     if (!step) {

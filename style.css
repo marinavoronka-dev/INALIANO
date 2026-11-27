@@ -211,11 +211,6 @@ html:not([data-installable]) [data-install-app]{display:none}
 .alphabet-grid small{font-size:.8rem;color:var(--muted)}
 .alphabet-grid .action:hover,.alphabet-grid .action:focus-visible{background:#d9f0f9;border-color:#72aabc}
 @media(max-width:500px){.alphabet-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
-.toc-card ul{margin:12px 0 0;padding:0;display:grid;gap:6px;list-style:none}
-.toc-card li a{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:50px;padding:7px 11px;border-radius:10px;border:1px solid var(--line);text-decoration:none}
-.toc-card li a:hover,.toc-card li a:focus-visible{background:#edf7fb;border-color:#72aabc}
-.toc-card li strong,.toc-card li small{display:block}
-.toc-card li small{font-size:.84rem;color:var(--muted)}
 .toc-number{font-size:.88rem;color:var(--accent);font-weight:750;white-space:nowrap}
 
 .letter-grid .letter-needs-fix{border:2px dashed #a23124;background:#fff1ea}
@@ -309,4 +304,20 @@ html:not([data-installable]) [data-install-app]{display:none}
   .hero .lupa-intro{margin:0 0 10px}
   .lupa-story{margin:7px 0 0}
   .home-help{grid-template-columns:1fr}
+}
+
+.toc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.toc-tile{display:grid;gap:9px;min-height:117px;padding:13px;background:white;border:1px solid var(--line);border-radius:14px;text-decoration:none}
+.toc-tile:hover,.toc-tile:focus-visible{border-color:#72aabc;background:#edf7fb}
+.toc-tile-top{display:flex;justify-content:space-between;align-items:start;gap:6px}
+.toc-tile .symbol{width:45px;height:45px;background:#ddf3fc;color:var(--accent);font-size:22px}
+.toc-tile strong,.toc-tile small{display:block}
+.toc-tile strong{font-size:1.1rem}
+.toc-tile small{color:var(--muted);font-size:.84rem}
+.toc-reference{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.toc-reference .action{padding-inline:5px;font-size:.86rem}
+@media(max-width:600px){
+  .toc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .toc-tile{min-height:106px;padding:10px}
+  .toc-tile .symbol{width:39px;height:39px}
 }
