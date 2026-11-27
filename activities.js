@@ -27,16 +27,22 @@ const colorClass = (letter) => {
   if ('BCDFG'.includes(letter)) return 'blu';
   return 'HLMNP'.includes(letter) ? 'verde' : 'giallo';
 };
+const letterPaint = (title, items, inks, colorFor, legend) => ({
+  type:'letterpaint', title, items, inks, legend,
+  guide:Object.fromEntries(items.map(letter => [letter,colorFor(letter)]))
+});
 const math = (examples) => examples.map(([expression, result]) => [expression, numberNames[result - 1]]);
 const steps = {
   2:[trace(letterPairs.map(([a,b]) => a + ' ' + b), 'Пропиши итальянский алфавит')],
-  3:[pick('Раскрась гласные красным, а согласные синим', letterNames.map(l => [l,'AEIOU'.includes(l) ? 'rosso' : 'blu']), ['rosso','blu'])],
+  3:[letterPaint('Раскрась гласные красным, а согласные синим',letterNames,['rosso','blu'],letter => 'AEIOU'.includes(letter) ? 'rosso' : 'blu')],
   4:[match('Найди пары заглавных и строчных букв', byName(letterPairs,'B G C H R Q Z U S T E A L I'))],
   5:[{type:'letterpaint',title:'Раскрась пять букв любыми цветами',items:letterNames}],
   27:[select('Выбери буквы итальянского алфавита',words('A Ц D Ь E K T Ё S К N X M Ф C Э L P Ч З Ю Ъ'),words('A D E T S N M C L P'))],
   28:[trace(letterPairs.map(([a,b]) => a + ' ' + b))],
   29:[trace(['A a','B b','C c','D d']), match('Подбери строчные буквы',letterPairs), match('Подбери заглавные буквы',reverse(letterPairs)),free('Сравни итальянские и русские буквы',['Какие буквы выглядят одинаково?','Какие итальянские буквы не встречаются в русском алфавите?'])],
-  30:[pick('Раскрась буквы по группам',letterNames.map(l => [l,colorClass(l)]),['rosso','blu','verde','giallo']),free('Запиши слова со страницы 31',['Запиши слова, а затем отдельно выпиши первую и последнюю букву каждого.'])],
+  30:[letterPaint('Раскрась буквы по группам',letterNames,['rosso','blu','verde','giallo'],colorClass,
+      'A E I O U — красный · B C D F G — синий · H L M N P — зелёный · Q R S T V Z — жёлтый'),
+    free('Запиши слова со страницы 31',['Запиши слова, а затем отдельно выпиши первую и последнюю букву каждого.'])],
   31:[read('Прочитай слова вслух',alphabet.words)],
   32:[type('Запиши алфавит по памяти',[['Все буквы по порядку',letterNames.join(' ')]]),match('Подбери первую букву',pairs('Fratello:F|Madre:M|Nonno:N|Gatto:G|Rosso:R|Casa:C|Verde:V'))],
   33:[read('Числа от одного до десяти',numbers.words),type('Допиши названия чисел',pairs('N_ve:nove|S_t_e:sette|_ei:sei|Q_at_ro:quattro|Di_c_:dieci|_re:tre|U_o:uno|Du_:due|C_nq_e:cinque|O_t_:otto'))],

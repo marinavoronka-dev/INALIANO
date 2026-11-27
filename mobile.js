@@ -224,13 +224,34 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
       renderPad(byId('pad'),sample,null,current.index,undefined,marks => { done.disabled = !marks.length || current.solved.includes(current.index); });
       done.onclick = () => { solve(current.index,step.samples.length); done.disabled = true; done.textContent = '✓ Пропись готова'; nextAction(step.samples); };
     } else if (step.type === 'letterpaint') {
-      const ink = current.ink || defaultPalette[0];
-      body.innerHTML = `<p>Выбери цвет, потом коснись буквы.</p><div class="pad-palette">${defaultPalette.slice(0,8).map(name => {
+      const {guide} = step;
+      const inks = step.inks || defaultPalette.slice(0,8);
+      const ink = inks.includes(current.ink) ? current.ink : inks[0];
+      if (guide && current.solved.length) {
+        // Retain correct answers saved under the earlier multiple-choice activity.
+        current.solved.forEach(index => {
+          const letter = step.items[index];
+          if (letter && !current.values[letter]) current.values[letter] = guide[letter];
+        });
+        current.solved = [];
+        persist();
+      }
+      const filled = step.items.filter(letter => current.values[letter]).length;
+      const wrong = guide ? step.items.filter(letter => current.values[letter] !== guide[letter]) : [];
+      const locked = guide && current.done;
+      body.innerHTML = `<p>Выбери цвет, потом коснись буквы. Чтобы изменить цвет буквы, раскрась её ещё раз.</p>
+      ${step.legend ? `<p class="art-legend">${escape(step.legend)}</p>` : ''}
+      <div class="pad-palette" role="group" aria-label="Цвета">${inks.map(name => {
         const [hex,label] = colorMap.get(name);
-        return `<button type="button" class="pad-color" data-letter-ink="${name}" style="--paint:${hex}" aria-pressed="${name === ink}"><i></i><span>${label}</span></button>`;
-      }).join('')}</div><div class="letter-grid">${step.items.map(letter => `<button type="button" data-letter="${letter}" style="--letter-color:${colorMap.get(current.values[letter])?.[0] || 'white'}">${letter}</button>`).join('')}</div>
-      <p aria-live="polite">Раскрашено: ${Object.keys(current.values).length}</p>
-      ${choice(current.done ? '✓ Буквы готовы' : 'Готово',current.done || Object.keys(current.values).length < 5,'id="done-letters"')}`;
+        return `<button type="button" class="pad-color" data-letter-ink="${name}" style="--paint:${hex}" aria-pressed="${name === ink}" ${locked ? 'disabled' : ''}><i></i><span>${label}</span></button>`;
+      }).join('')}</div><div class="letter-grid">${step.items.map(letter => {
+        const [color,label] = colorMap.get(current.values[letter]) || ['white','без цвета'];
+        const needsFix = current.checked && wrong.includes(letter);
+        return `<button type="button" data-letter="${letter}" aria-label="${letter}, ${label}${needsFix ? ', проверь цвет' : ''}"
+          class="${needsFix ? 'letter-needs-fix' : ''}" style="--letter-color:${color}" ${locked ? 'disabled' : ''}>${letter}</button>`;
+      }).join('')}</div>
+      <p aria-live="polite">Раскрашено: ${filled}${guide ? ' из ' + step.items.length : ''}</p>
+      ${choice(current.done ? '✓ Буквы готовы' : guide ? 'Проверить' : 'Готово',current.done || filled < (guide ? step.items.length : 5),'id="done-letters"')}`;
       body.querySelectorAll('[data-letter-ink]').forEach(button => button.onclick = () => {
         current.ink = button.dataset.letterInk;
         persist();
@@ -243,7 +264,14 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
         render();
         bodyFocus(`[data-letter="${button.dataset.letter}"]`);
       });
-      byId('done-letters').onclick = () => { markDone(); render(); };
+      byId('done-letters').onclick = () => {
+        const message = wrong.length ? 'Проверь цвет у выделенных букв.' : 'Буквы раскрашены! ★';
+        current.checked = true;
+        if (!wrong.length) markDone();
+        else persist();
+        render();
+        feedback(message);
+      };
     } else if (step.type === 'art') {
       const canFinish = (marks) => marks.some(mark => mark.kind !== 'erase');
       body.innerHTML = `${step.captions ? `<p class="art-legend">${escape(step.captions)}</p>` : ''}<div id="pad"></div>${choice(current.done ? '✓ Рисунок готов' : 'Рисунок готов',current.done || !canFinish(current.pads[0] || []),'id="done-pad"')}`;

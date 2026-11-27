@@ -218,3 +218,6 @@ html:not([data-installable]) [data-install-app]{display:none}
 .toc-card li strong,.toc-card li small{display:block}
 .toc-card li small{font-size:.84rem;color:var(--muted)}
 .toc-number{font-size:.88rem;color:var(--accent);font-weight:750;white-space:nowrap}
+
+.letter-grid .letter-needs-fix{border:2px dashed #a23124;background:#fff1ea}
+.letter-grid button:disabled{opacity:1}
