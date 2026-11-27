@@ -75,10 +75,10 @@ function home() {
       <div class="hero-copy">
         <span class="tag">1 класс · 6+</span>
         <h1>Мой первый <span>итальянский</span></h1>
-        <p>Учи новые слова, слушай их по-итальянски и рисуй прямо на страницах тетради.</p>
+        <p><strong>Я Лино!</strong> Давай начнём с урока. Когда увидишь кнопку «Послушать», нажми её и повтори слово вслух.</p>
         <div class="buttons">${link(solved.size && solved.size < total ? 'Продолжить уроки' : 'Начать урок', '#lesson/' + next.id, true)}${link('Открыть тетрадь', '#book')}<button type="button" class="action" data-install-app>Установить тетрадь</button></div>
       </div>
-      <div class="hero-art"><span class="spark" aria-hidden="true">✦</span><span class="spark two" aria-hidden="true">✧</span><img src="ape.webp" alt="Пчёлка из рабочей тетради"><span class="art-label" lang="it">Ciao!</span></div>
+      <div class="hero-art"><img src="lino.webp" alt="Лисёнок Лино с тетрадью" width="669" height="720"></div>
     </section>
     <section aria-labelledby="themes-heading">
       <div class="section-title"><h2 id="themes-heading">Выбери тему</h2><span>${themes.filter((theme) => quizCount(theme) === theme.items.length).length} из 6 пройдено</span></div>
@@ -127,7 +127,9 @@ function lesson(theme) {
       if (!matches) {
         option?.classList.add('wrong');
         feedback.classList.add('try');
-        feedback.textContent = 'Попробуй ещё раз!';
+        feedback.textContent = q.spoken
+          ? 'Попробуй ещё раз! Лино советует послушать подсказку ещё раз.'
+          : 'Попробуй ещё раз!';
         return;
       }
       correct = true;
