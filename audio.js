@@ -12,6 +12,7 @@ export const clips = {
   "azzurro": "010",
   "balena": "011",
   "banana": "012",
+  "bebè": "104",
   "bi": "013",
   "bianco": "014",
   "blu": "015",

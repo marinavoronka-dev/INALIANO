@@ -15,6 +15,19 @@ const normalize = (value) => value.toLocaleLowerCase('it').normalize('NFC').repl
 const enabled = ' aria-pressed="true"';
 const soundButton = '<button type="button" class="action sound-button" aria-label="Послушать">🔊</button>';
 const correctly = 'Верно! ★';
+const familyCharacters = [
+  [13,24,'nonna','бабушка'],
+  [30,15,'zia','тётя'],
+  [46,15,'mamma','мама','madre'],
+  [59,13,'papà','папа','padre'],
+  [78,20,'nonno','дедушка'],
+  [91,31,'sorella','сестра'],
+  [23,52,'fratello','брат'],
+  [42,73,'fratello','младший брат'],
+  [43,39,'bebè','малыш'],
+  [66,34,'bebè','малыш'],
+  [69,70,'cane','собака']
+];
 const retry = 'Почти! Попробуй ещё раз.';
 const checks = (solved, index, expected) => solved.includes(index) ? ' ✓' : expected ? ' ' + expected : '';
 const jumble = (options, offset = 0) => options.map((_, i) => options[(options.length - 1 - i + offset) % options.length]);
@@ -202,12 +215,38 @@ export function mountMobile(app, {page, pages, pageTitle, read, save, speech, ar
     }
 
     if (step.type === 'read') {
+      const familyPicture = page === '58' ? `
+        <p id="family-help">Нажми на лицо персонажа, чтобы узнать, кто это по-итальянски.</p>
+        <figure class="family-figure" aria-describedby="family-help">
+          <div class="family-picture">
+            <img src="${artSource('family-touch')}" alt="Иллюстрация семьи из рабочей тетради" width="670" height="411">
+            ${familyCharacters.map(([x,y,,ru],i) =>
+              `<button type="button" class="family-character" data-family="${i}" aria-label="${escape(ru === 'малыш' ? ru + ' ' + (i === 8 ? 'слева' : 'справа') : ru)}"
+                aria-pressed="false" style="--family-x:${x}%;--family-y:${y}%"></button>`).join('')}
+          </div>
+          <figcaption class="family-caption" hidden>
+            <span id="family-name" role="status"></span>
+            <button type="button" class="action sound-button" id="family-sound" aria-label="Послушать выбранное слово">🔊</button>
+          </figcaption>
+        </figure>` : '';
       const words = page === 'alphabet'
         ? `<p>Нажми на букву, чтобы услышать её название.</p><div class="alphabet-grid">${step.items.map(([term,pronunciation],i) =>
           `<button type="button" class="action" data-sound="${i}" aria-label="Послушать ${escape(term)}"><strong lang="it">${escape(term)}</strong><small lang="it">${escape(pronunciation)}</small></button>`).join('')}</div>`
         : `<div class="mobile-wordlist">${step.items.map(([term,translation,color],i) => `<div class="mobile-word">${termPicture(term)}<div><strong ${page === '1' ? '' : 'lang="it"'}>${escape(term)}</strong><span>${color ? `<i class="swatch" style="background:${color}"></i>` : ''}${escape(translation)}</span></div>${page === '1' ? '' : soundButton.replace('aria-label="Послушать"',`data-sound="${i}" aria-label="Послушать ${escape(term)}"`)}</div>`).join('')}</div>`;
-      body.innerHTML = `${words}
+      body.innerHTML = `${familyPicture}${words}
       ${choice(current.done ? '✓ Прочитано' : 'Я прочитал',current.done,'id="done-read"')}`;
+      if (familyPicture) {
+        const targets = body.querySelectorAll('[data-family]');
+        const label = byId('family-name');
+        const sound = byId('family-sound');
+        targets.forEach(target => target.onclick = () => {
+          const [,,word,translation,alias] = familyCharacters[+target.dataset.family];
+          targets.forEach(item => item.setAttribute('aria-pressed',String(item === target)));
+          label.closest('figcaption').hidden = false;
+          label.innerHTML = `<strong lang="it">${escape(alias ? word + ' / ' + alias : word)}</strong> · ${escape(translation)}`;
+          connectSpeaker(sound,word);
+        });
+      }
       body.querySelectorAll('[data-sound]').forEach(button => {
         const [word,,,voice] = step.items[+button.dataset.sound];
         connectSpeaker(button,voice || word);

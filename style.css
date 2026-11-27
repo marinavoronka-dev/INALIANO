@@ -254,3 +254,14 @@ html:not([data-installable]) [data-install-app]{display:none}
   .pad-dialog .pad-tools,.pad-dialog .pad-palette,.pad-dialog .pad-status{grid-column:1;margin:0}
   .pad-dialog .pad-frame{grid-column:2;grid-row:1/4;width:min(100%,calc((100dvh - 75px) * var(--pad-ratio)))}
 }
+
+.family-figure{width:min(100%,570px);margin:10px auto 18px}
+.family-picture{position:relative;border:1px solid var(--line);border-radius:15px;background:white;overflow:hidden}
+.family-picture img{display:block;width:100%;height:auto}
+.family-character{position:absolute;left:var(--family-x);top:var(--family-y);transform:translate(-50%,-50%);width:44px;height:44px;
+  padding:0;border:0;border-radius:50%;background:transparent;touch-action:manipulation}
+.family-character::after{content:"";position:absolute;bottom:1px;right:1px;width:10px;height:10px;border:2px solid white;border-radius:50%;background:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.mobile-book button.family-character[aria-pressed="true"],.family-character:hover,.family-character:focus-visible{
+  background:#53bfe72e;border:2px solid var(--accent);z-index:1}
+.family-caption{display:flex;min-height:54px;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;padding:6px 10px;border-radius:11px;background:#ddf3fc}
+.family-caption strong{color:var(--accent)}
